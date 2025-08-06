@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test 01</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: black;
+      padding-top: 80px;
+    }
+    h1 {
+      color: #075e54;
+    }
+    h2 {
+        text-align: right;
+      color: #075e54;
+      font-family: 'Times New Roman', Times, serif, sans-serif;
+    }
+    .abc {
+      /* background-color: white; */
+      padding: 20px;
+      border-radius: 10px;
+      backdrop-filter: blur(1000px);
+    box-shadow: 0px 0px 30px #075e54;
+    border: 2px solid #075e54be;
+    margin: 100px;
+    }
+    #countdown {
+      font-size: 2em;
+      margin-top: 30px;
+      color: #075e54;
+    }
+  </style>
+</head>
+<body>
+<div class="abc">
+  <h1>🚧 Cette page sera bientôt disponible !</h1>
+  <p>Ouverture prévue le <strong>08 août 2025 à 00h00</strong></p>
+
+  <div id="countdown">Chargement du compte à rebours...</div>
+
+  <h2>𝟏𝟖✞</h2>
+</div>
+  <script>
+    // Format universel de date : année, mois-1 (car 0 = janvier), jour, heure, minute, seconde
+    const dateCible = new Date(2025, 7, 8, 0, 0, 0); // 08 août 2025 à 00:00:00
+
+    const countdownElement = document.getElementById("countdown");
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = dateCible.getTime() - now;
+
+      if (distance <= 0) {
+        window.location.href = "page.html";
+        return;
+      }
+
+      const jours = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const heures = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const secondes = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownElement.innerHTML =
+        `${jours}j ${heures}h ${minutes}m ${secondes}s`;
+    }
+
+    updateCountdown(); // Appel initial
+    setInterval(updateCountdown, 1000); // Mise à jour toutes les secondes
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Page débloquée</title>
+  <style>
+    body {
+      background-color: #ece5dd;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h2 {
+        color: white;
+        text-align: center;
+    }
+    .wa-container {
+      background: black;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 500px;
+      border: 1px solid #dadada;
+    }
+    .wa-header {
+      background: #075e54;
+      color: #fff;
+      padding: 16px;
+      border-radius: 10px 10px 0 0;
+      font-size: 1.2em;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .wa-messages {
+      flex: 1;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: black;
+      border-radius: 0 0 10px 10px;
+    }
+    .wa-message {
+      max-width: 75%;
+      padding: 10px 16px;
+      border-radius: 7.5px;
+      font-size: 1em;
+      /* line-height: 1.4; */
+      box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+      word-break: break-word;
+    }
+    .wa-message.received {
+      background: rgb(30, 30, 30);
+      color: white;
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+    .wa-message.sent {
+      background: #dcf8c6;
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wa-container">
+    <div class="wa-header">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="height:28px;width:28px;vertical-align:middle;">
+      Benjiii💞
+    </div>
+    <div class="wa-messages">
+      <div class="wa-message sent">
+        J'ai retrouvé notre photo
+      </div>
+      <div class="wa-message sent">
+        <img src="iii.jpg" alt="stickers" height="80">
+      </div>
+      <div class="wa-message sent">
+        Encadre ça
+      </div>
+      <div class="wa-message sent">
+        Vite
+      </div>
+      <div class="wa-message received">
+        Bonjour 😂😂
+      </div>
+      <div class="wa-message received">
+        Après ne pas m'avoir répondu<br>pendant 1000 ans
+      </div>
+      <h2>Chargement du cours de l'histoire...</h2>
+      <div class="wa-message received" style="display: flex; align-items: center; gap: 10px; min-width: 180px;">
+        <button id="playPauseBtn" style="background: #25d366; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+          <svg id="playIcon" xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='white' viewBox='0 0 24 24'><polygon points='8,5 19,12 8,19'/></svg>
+          <svg id="pauseIcon" xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='white' viewBox='0 0 24 24' style="display:none"><rect x='6' y='5' width='4' height='14' rx='1'/><rect x='14' y='5' width='4' height='14' rx='1'/></svg>
+        </button>
+        <audio id="audioMsg" src="WhatsApp Audio 2025-08-07 à 00.22.19_03309c5c.waptt.opus"></audio>
+        <div style="flex:1; display:flex; align-items:center; gap:8px;">
+          <div style="background:#b2dfdb; height:4px; border-radius:2px; width:80px; position:relative;">
+            <div id="audioProgress" style="background:#25d366; height:100%; width:60%; border-radius:2px;"></div>
+          </div>
+          <span id="audioTime" style="font-size:0.95em; color:#fff;">0:12</span>
+        </div>
+        <span style="font-size:0.9em; color:#888;">🕒</span>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const audio = document.getElementById('audioMsg');
+  const audioProgress = document.getElementById('audioProgress');
+  const audioTime = document.getElementById('audioTime');
+
+  let isPlaying = false;
+  let duration = 12; // durée fictive par défaut
+
+  // Met à jour la durée réelle si possible
+  audio.addEventListener('loadedmetadata', function() {
+    duration = Math.floor(audio.duration) || 12;
+    audioTime.textContent = `0:${duration}`;
+  });
+
+  playPauseBtn.addEventListener('click', function() {
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  });
+
+  audio.addEventListener('play', function() {
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = '';
+    isPlaying = true;
+  });
+  audio.addEventListener('pause', function() {
+    playIcon.style.display = '';
+    pauseIcon.style.display = 'none';
+    isPlaying = false;
+  });
+  audio.addEventListener('ended', function() {
+    playIcon.style.display = '';
+    pauseIcon.style.display = 'none';
+    audio.currentTime = 0;
+    audioProgress.style.width = '0%';
+    audioTime.textContent = formatTime(duration);
+  });
+  audio.addEventListener('timeupdate', function() {
+    const percent = (audio.currentTime / duration) * 100;
+    audioProgress.style.width = percent + '%';
+    const remain = Math.max(0, Math.round(duration - audio.currentTime));
+    audioTime.textContent = formatTime(remain);
+  });
+
+  function formatTime(secs) {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return m + ':' + s;
+  }
+</script>
+</html>
